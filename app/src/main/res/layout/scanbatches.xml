@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Barcode"
+        android:id="@+id/barcode"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:gravity="center" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="rfid"
+        android:id="@+id/rfid"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="location"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:id="@+id/loc"
+        android:gravity="center"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="sub location"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:id="@+id/subloc"
+        android:gravity="center"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="department"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:id="@+id/dpt"
+        android:gravity="center"
+        android:layout_weight="1" />
+
+</LinearLayout>

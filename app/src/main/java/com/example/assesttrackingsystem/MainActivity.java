@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.assesttrackingsystem.assignassest.AssestTrackingActivity;
+import com.example.assesttrackingsystem.auditpackage.auditActivity;
 import com.example.assesttrackingsystem.mappingassest.MappingActivity;
 import com.example.assesttrackingsystem.transferassest.TransferActivity;
 
@@ -36,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, TransferActivity.class));
+            }
+        });
+        findViewById(R.id.audit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, auditActivity.class));
             }
         });
 

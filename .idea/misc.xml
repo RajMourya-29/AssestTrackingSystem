@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Praful/AssestTrackingSystem/app/src/main/res/layout/activity_audit.xml" value="0.21" />
+        <entry key="..\:/Praful/AssestTrackingSystem/app/src/main/res/layout/activity_main.xml" value="0.19635416666666666" />
+        <entry key="..\:/Praful/AssestTrackingSystem/app/src/main/res/layout/activity_transfer.xml" value="0.19635416666666666" />
+        <entry key="..\:/Praful/AssestTrackingSystem/app/src/main/res/layout/item_spinner_layout.xml" value="0.19635416666666666" />
+        <entry key="..\:/Praful/AssestTrackingSystem/app/src/main/res/layout/scanbatches.xml" value="0.19635416666666666" />
         <entry key="..\:/Users/software 1/AndroidStudioProjects/AssestTrackingSystem/app/src/main/res/drawable/arrowspinner.xml" value="0.2203125" />
         <entry key="..\:/Users/software 1/AndroidStudioProjects/AssestTrackingSystem/app/src/main/res/drawable/rounded_edittext.xml" value="0.2203125" />
         <entry key="..\:/Users/software 1/AndroidStudioProjects/AssestTrackingSystem/app/src/main/res/layout/activity_assest_tracking.xml" value="0.20416666666666666" />

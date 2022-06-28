@@ -9,14 +9,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.assesttrackingsystem.ApiInterface;
 import com.example.assesttrackingsystem.Global;
 import com.example.assesttrackingsystem.MainActivity;
 import com.example.assesttrackingsystem.R;
 import com.example.assesttrackingsystem.Responsee;
+import com.example.assesttrackingsystem.auditpackage.Databasehelper;
+import com.example.assesttrackingsystem.auditpackage.GetDeptResponse;
+import com.example.assesttrackingsystem.auditpackage.LocSublocResponse;
+import com.example.assesttrackingsystem.mappingassest.GlobalProgressDialog;
 import com.example.assesttrackingsystem.mappingassest.MappingActivity;
+import com.example.assesttrackingsystem.mappingassest.RetrofitInstance;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +39,7 @@ public class LoginPageActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Button login;
     Retrofit retrofit;
+    private Databasehelper handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +50,14 @@ public class LoginPageActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressbar);
         login = findViewById(R.id.login);
-
+        handler = new Databasehelper(getApplicationContext());
         retrofit = new Retrofit.Builder()
                 .baseUrl(Global.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         login.setOnClickListener(view -> {
-
+            startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
             if(userid.getText().toString().trim().equals("")){
                 Global.showsnackbar(LoginPageActivity.this,"Please Enter UserId");
             }else if(password.getText().toString().trim().equals("")){
@@ -89,5 +98,99 @@ public class LoginPageActivity extends AppCompatActivity {
 
         });
 
+
     }
+
+    private void getLocSubloc() {
+        GlobalProgressDialog.showProgress(this, " please wait...");
+
+        if (!Global.isOnline(LoginPageActivity.this)) {
+            if (GlobalProgressDialog.isProgressShowing()) {
+                GlobalProgressDialog.dismissProgress();
+            }
+            Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show();
+        } else {
+
+            RetrofitInstance.getInstance().getApiInterface().GetLocandsubloc()
+                    .enqueue(new Callback<LocSublocResponse>() {
+                        @Override
+                        public void onResponse(Call<LocSublocResponse> call, Response<LocSublocResponse> response) {
+                            if (response.isSuccessful() && response.body() != null){
+                                if (response.body().getMessage().equals("Success")){
+                                    if (response.body().getResponse() != null){
+                                        for (int i = 0; i < response.body().getResponse().size(); i++){
+                                            handler.insertlocation(response.body().getResponse().get(i).getLocationname(),response.body().getResponse().get(i).getSublocation());
+                                        }
+
+                                    }
+
+                                } else {
+                                    Toast.makeText(LoginPageActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(LoginPageActivity.this, "Fail: "+response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (GlobalProgressDialog.isProgressShowing()) {
+                                GlobalProgressDialog.dismissProgress();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LocSublocResponse> call, Throwable t) {
+                            if (GlobalProgressDialog.isProgressShowing()) {
+                                GlobalProgressDialog.dismissProgress();
+                            }
+                            Toast.makeText(LoginPageActivity.this, "Failure: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }
+    }
+
+    private void getDepartment() {
+        GlobalProgressDialog.showProgress(this, "please wait...");
+
+        if (!Global.isOnline(LoginPageActivity.this)) {
+            if (GlobalProgressDialog.isProgressShowing()) {
+                GlobalProgressDialog.dismissProgress();
+            }
+            Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show();
+        } else {
+
+            RetrofitInstance.getInstance().getApiInterface().Getdepartment()
+                    .enqueue(new Callback<GetDeptResponse>() {
+                        @Override
+                        public void onResponse(Call<GetDeptResponse> call, Response<GetDeptResponse> response) {
+                            if (response.isSuccessful() && response.body() != null){
+                                if (response.body().getMessage().equals("Success")){
+                                    if (response.body().getResponse() != null){
+                                        for (int i = 0; i < response.body().getResponse().size(); i++){
+                                            handler.insertdepartment(response.body().getResponse().get(i).getDepartment());
+                                        }
+
+                                    }
+
+                                } else {
+                                    Toast.makeText(LoginPageActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(LoginPageActivity.this, "Fail: "+response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (GlobalProgressDialog.isProgressShowing()) {
+                                GlobalProgressDialog.dismissProgress();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<GetDeptResponse> call, Throwable t) {
+                            if (GlobalProgressDialog.isProgressShowing()) {
+                                GlobalProgressDialog.dismissProgress();
+                            }
+                            Toast.makeText(LoginPageActivity.this, "Failure: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.assesttrackingsystem;
 
+import com.example.assesttrackingsystem.auditpackage.GetDeptResponse;
+import com.example.assesttrackingsystem.auditpackage.LocSublocResponse;
 import com.example.assesttrackingsystem.mappingassest.SaveInventoryBarcodeResponse;
 import com.example.assesttrackingsystem.transferassest.pojoclass.AssetDetail;
 
@@ -54,5 +56,11 @@ public interface ApiInterface {
     Call<SaveInventoryBarcodeResponse> saveAllBarcode(
             @Field("json") String barcodeData);
 
+
+    @GET("Getloc_subloc")
+    Call<LocSublocResponse> GetLocandsubloc();
+
+    @GET("Getdepartment")
+    Call<GetDeptResponse> Getdepartment();
 
 }

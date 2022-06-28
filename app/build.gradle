@@ -38,7 +38,8 @@ dependencies {
 
     // custom dailog box
     implementation 'com.github.d-max:spots-dialog:0.4@aar'
-
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

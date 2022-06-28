@@ -17,6 +17,9 @@
         android:theme="@style/Theme.AssestTrackingSystem"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".auditpackage.auditActivity"
+            android:exported="false" />
+        <activity
             android:name=".transferassest.TransferActivity"
             android:exported="false" />
         <activity
