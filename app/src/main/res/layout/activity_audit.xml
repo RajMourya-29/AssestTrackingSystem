@@ -102,6 +102,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_to"
+                app:layout_constraintBottom_toBottomOf="parent"
                 >
 
                 <TextView
@@ -138,40 +139,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/rounded_edittext"
                 android:hint="BARCODE"
+                android:padding="@dimen/_5sdp"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:textSize="@dimen/_15ssp"
-                android:padding="@dimen/_5sdp"
-                android:background="@drawable/rounded_edittext"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rfid"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/rfid"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/rfid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/rounded_edittext"
                 android:hint="RFID"
+                android:padding="@dimen/_5sdp"
                 android:textAlignment="center"
                 android:textSize="@dimen/_15ssp"
-                android:padding="@dimen/_5sdp"
-                android:background="@drawable/rounded_edittext"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rel_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/rel_layout"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rfid"/>
+
             <RelativeLayout
+                android:id="@+id/rel_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
-                android:id="@+id/rel_layout"
                 android:background="@drawable/rounded_edittext"
-                app:layout_constraintTop_toBottomOf="@id/rfid"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rfid">
 
                 <LinearLayout
                     android:id="@+id/rec_title"
@@ -184,50 +187,51 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:text="Barcode"
                         android:textColor="@color/dark_green"
-                        android:textSize="@dimen/_13ssp"
-                        android:gravity="center" />
+                        android:textSize="12dp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:text="RFID"
                         android:textColor="@color/dark_green"
-                        android:textSize="@dimen/_13ssp"
-                        android:gravity="center" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="location"
                         android:textColor="@color/dark_green"
-                        android:textSize="@dimen/_13ssp"
-                        android:gravity="center"
-                        android:layout_weight="1" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="sub location"
                         android:textColor="@color/dark_green"
-                        android:textSize="@dimen/_13ssp"
-                        android:gravity="center"
-                        android:layout_weight="1" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="department"
                         android:textColor="@color/dark_green"
-                        android:textSize="@dimen/_13ssp"
-                        android:gravity="center"
-                        android:layout_weight="1" />
+                        android:textSize="11dp" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rec"
+                    android:id="@+id/recycle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rec_title"

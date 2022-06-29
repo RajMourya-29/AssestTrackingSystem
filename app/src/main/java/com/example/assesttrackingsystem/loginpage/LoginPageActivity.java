@@ -57,7 +57,7 @@ public class LoginPageActivity extends AppCompatActivity {
                 .build();
 
         login.setOnClickListener(view -> {
-            startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
+
             if(userid.getText().toString().trim().equals("")){
                 Global.showsnackbar(LoginPageActivity.this,"Please Enter UserId");
             }else if(password.getText().toString().trim().equals("")){
@@ -78,6 +78,10 @@ public class LoginPageActivity extends AppCompatActivity {
 
                             if (checkResponse.getResponse().equals("login successfull")) {
                                 login.setVisibility(View.VISIBLE);
+                                handler.deletelocation();
+                                getLocSubloc();
+                                getDepartment();
+
                                 startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
                             }else {
                                 Global.showsnackbar(LoginPageActivity.this,"No User Found");

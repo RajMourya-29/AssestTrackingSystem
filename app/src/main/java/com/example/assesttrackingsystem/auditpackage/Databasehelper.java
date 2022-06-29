@@ -21,11 +21,12 @@ public class Databasehelper extends SQLiteOpenHelper {
 
 
     private static final String ID="id";
+    private static final String  BARCODE= "barcode";
+    private static final String  RFID= "rfid";
     private static final String LOCATION = "location";
     private static final String SUBLOCATION = "sublocation";
     private static final String DEPARTMENT = "department";
-    private static final String  BARCODE= "barcode";
-    private static final String  RFID= "rfid";
+
 
 
     public Databasehelper(@Nullable Context context) {
@@ -47,7 +48,7 @@ public class Databasehelper extends SQLiteOpenHelper {
         );
 
         db.execSQL( "create table all_data " +
-                "(id integer primary key, location text,sublocation text,department text,barcode text)"
+                "(id integer primary key, barcode text,rfid text,location text,sublocation text,department text)"
         );
 
 
@@ -68,16 +69,14 @@ public class Databasehelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String QUERY = "SELECT * FROM  "+LOCATION_TABLE + " WHERE LOCATION='"+location+"'; ";
         Cursor cursor = db.rawQuery(QUERY, null);
-        if (cursor.getCount() > 0){
-            return 0;
-        } else {
+
             ContentValues contentValues = new ContentValues();
             contentValues.put("location", location);
             contentValues.put("sublocation", sublocation);
             db.insert("location_table", null, contentValues);
             return 1;
-        }
-    }
+
+}
 
 //    public int insertsublocation (String sublocation) {
 //        SQLiteDatabase db = this.getWritableDatabase();
@@ -107,7 +106,7 @@ public class Databasehelper extends SQLiteOpenHelper {
         }
     }
 
-    public int insertalldata (String location,String sublocation,String department,String barcode ) {
+    public int insertalldata (String barcode, String rfid ,String location,String sublocation,String department) {
         SQLiteDatabase db = this.getWritableDatabase();
         String QUERY = "SELECT * FROM  "+ALL_DATA + " WHERE BARCODE='"+barcode+"'; ";
         Cursor cursor = db.rawQuery(QUERY, null);
@@ -115,19 +114,21 @@ public class Databasehelper extends SQLiteOpenHelper {
             return 0;
         } else {
             ContentValues contentValues = new ContentValues();
+            contentValues.put("barcode", barcode);
+            contentValues.put("rfid", rfid);
             contentValues.put("location", location);
             contentValues.put("sublocation", sublocation);
             contentValues.put("department", department);
-            contentValues.put("barcode", barcode);
             db.insert("all_data", null, contentValues);
             return 1;
+
         }
     }
 
 
-    public List<String> getLoc()
+    public ArrayList<String> getLoc()
     {
-      List<String> outputlist = new ArrayList();
+        ArrayList<String> outputlist = new ArrayList();
         String selectQuery =   "SELECT DISTINCT LOCATION FROM " +LOCATION_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -137,29 +138,8 @@ public class Databasehelper extends SQLiteOpenHelper {
             {
                 String location = (cursor.getString(cursor.getColumnIndex(LOCATION)));
 
-                outputlist.add(new String(location));
-            } while (cursor.moveToNext());
-        }
+                outputlist.add(location);
 
-        cursor.close();
-        return outputlist;
-    }
-
-
-    public List<String> getSubloc(String location)
-    {
-        List<String> outputlist = new ArrayList();
-        String selectQuery =   "SELECT  SUBLOCATION  FROM " +LOCATION_TABLE+
-                " where  LOCATION='"+location+";" ;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.moveToNext())
-        {
-            do
-            {
-                String sublocation = (cursor.getString(cursor.getColumnIndex(SUBLOCATION)));
-
-                outputlist.add(new String(sublocation));
             } while (cursor.moveToNext());
         }
 
@@ -169,9 +149,35 @@ public class Databasehelper extends SQLiteOpenHelper {
 
 
 
-    public List<String> getDepartment()
+    public List<String> getSubloc(String location) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+        String QUERY = "SELECT  SUBLOCATION FROM " +LOCATION_TABLE+
+                " where  LOCATION='"+location+"';" ;
+        Cursor cursor =  db.rawQuery(QUERY, null);
+
+
+        List<String> listdata = new ArrayList();
+        if (cursor.moveToFirst()){
+            do {
+                String a0=cursor.getString(cursor.getColumnIndex(SUBLOCATION));
+                // String a1=cursor.getString(cursor.getColumnIndex(DESC));
+
+
+                listdata.add(a0);
+
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return listdata;
+    }
+
+
+    public ArrayList<String> getDepartment()
     {
-        List<String> outputlist = new ArrayList();
+        ArrayList<String> outputlist = new ArrayList();
         String selectQuery =   "SELECT DISTINCT DEPARTMENT FROM " +DEPARTMENT_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -181,11 +187,43 @@ public class Databasehelper extends SQLiteOpenHelper {
             {
                 String department = (cursor.getString(cursor.getColumnIndex(DEPARTMENT)));
 
-                outputlist.add(new String(department));
+
+                outputlist.add(department);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         return outputlist;
     }
+
+    public void deletelocation(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(LOCATION_TABLE,null,null);
+        db.close();
+    }
+
+    public ArrayList<AuditModel> getalldata()
+    {
+        ArrayList<AuditModel> outputlist = new ArrayList();
+        String selectQuery =  "SELECT * FROM  "+ALL_DATA;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToNext())
+        {
+            do
+            {
+                String barcode = (cursor.getString(cursor.getColumnIndex(BARCODE)));
+                String rfid = (cursor.getString(cursor.getColumnIndex(RFID)));
+                String location = (cursor.getString(cursor.getColumnIndex(LOCATION)));
+                String sublocation = (cursor.getString(cursor.getColumnIndex(SUBLOCATION)));
+                String department = (cursor.getString(cursor.getColumnIndex(DEPARTMENT)));
+
+                outputlist.add(new AuditModel(barcode,rfid,location,sublocation,department));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return outputlist;
+    }
+
 }
