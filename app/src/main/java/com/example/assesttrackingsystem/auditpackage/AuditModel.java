@@ -7,13 +7,17 @@ public class AuditModel
     private  String loc;
     private String subloc;
     private String dept;
+    private String username;
+    private String usercode;
 
-    public AuditModel(String barcode, String rfid, String loc, String subloc, String dept) {
+    public AuditModel(String barcode, String rfid, String loc, String subloc, String dept, String username, String usercode) {
         this.barcode = barcode;
         this.rfid = rfid;
         this.loc = loc;
         this.subloc = subloc;
         this.dept = dept;
+        this.username = username;
+        this.usercode = usercode;
     }
 
     public String getBarcode() {
@@ -56,6 +60,22 @@ public class AuditModel
         this.dept = dept;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsercode() {
+        return usercode;
+    }
+
+    public void setUsercode(String usercode) {
+        this.usercode = usercode;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -64,6 +84,8 @@ public class AuditModel
                 ", loc='" + loc + '\'' +
                 ", subloc='" + subloc + '\'' +
                 ", dept='" + dept + '\'' +
+                ", username='" + username + '\'' +
+                ", usercode='" + usercode + '\'' +
                 '}';
     }
 }

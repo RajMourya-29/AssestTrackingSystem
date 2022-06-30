@@ -43,7 +43,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder>{
         holder.tv2.setText(result.get(position).getRfid());
         holder.tv3.setText(result.get(position).getLoc());
         holder.tv4.setText(result.get(position).getSubloc());
-        holder.tv4.setText(result.get(position).getDept());
+        holder.tv5.setText(result.get(position).getDept());
 
     }
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.example.assesttrackingsystem.auditpackage.LocSublocResponse;
 import com.example.assesttrackingsystem.mappingassest.GlobalProgressDialog;
 import com.example.assesttrackingsystem.mappingassest.MappingActivity;
 import com.example.assesttrackingsystem.mappingassest.RetrofitInstance;
+import com.example.assesttrackingsystem.utils.SharedPref;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.logging.Logger;
@@ -45,63 +47,76 @@ public class LoginPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+        String username = new SharedPref(LoginPageActivity.this).getString("username","NA");
+        Log.e("name: ", username);
+        if (!username.equals("NA")){
+            GlobalProgressDialog.showProgress(LoginPageActivity.this, "please wait...");
+            startActivity(new Intent(LoginPageActivity.this,MainActivity.class));
+        }else {
+            userid = findViewById(R.id.userid);
+            password = findViewById(R.id.password);
+            progressBar = findViewById(R.id.progressbar);
+            login = findViewById(R.id.login);
+            handler = new Databasehelper(getApplicationContext());
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(Global.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        userid = findViewById(R.id.userid);
-        password = findViewById(R.id.password);
-        progressBar = findViewById(R.id.progressbar);
-        login = findViewById(R.id.login);
-        handler = new Databasehelper(getApplicationContext());
-        retrofit = new Retrofit.Builder()
-                .baseUrl(Global.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        login.setOnClickListener(view -> {
+            login.setOnClickListener(v -> {
+              //  GlobalProgressDialog.showProgress(this, "Logging in please wait...");
+                String user = userid.getText().toString();
+                String pass = password.getText().toString();
 
-            if(userid.getText().toString().trim().equals("")){
-                Global.showsnackbar(LoginPageActivity.this,"Please Enter UserId");
-            }else if(password.getText().toString().trim().equals("")){
-                Global.showsnackbar(LoginPageActivity.this,"Please Enter Password");
-            }else {
-                login.setVisibility(View.INVISIBLE);
-                getuserid = userid.getText().toString();
-                getpassword = password.getText().toString();
-
-                ApiInterface apiClient = retrofit.create(ApiInterface.class);
-                Call<Responsee> call = apiClient.login(getuserid,getpassword);
-
-                call.enqueue(new Callback<Responsee>() {
-                    @Override
-                    public void onResponse(Call<Responsee> call, Response<Responsee> response) {
-                        if(response.isSuccessful()) {
-                            Responsee checkResponse = response.body();
-
-                            if (checkResponse.getResponse().equals("login successfull")) {
-                                login.setVisibility(View.VISIBLE);
-                                handler.deletelocation();
-                                getLocSubloc();
-                                getDepartment();
-
-                                startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
-                            }else {
-                                Global.showsnackbar(LoginPageActivity.this,"No User Found");
-                                login.setVisibility(View.VISIBLE);
-                            }
-                        }else {
-                            Global.showsnackbar(LoginPageActivity.this,"Something Went Wrong");
-                            login.setVisibility(View.VISIBLE);
+                if (user.isEmpty() || pass.isEmpty()) {
+                    Toast.makeText(LoginPageActivity.this, "Somthing is missing ", Toast.LENGTH_SHORT).show();
+                } else {
+                    //GlobalProgressDialog.showProgress(this, "Logging in please wait...");
+                    if (!Global.isOnline(LoginPageActivity.this)) {
+                        if (GlobalProgressDialog.isProgressShowing()) {
+                            GlobalProgressDialog.dismissProgress();
                         }
+                        Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show();
+                    } else {
+                        RetrofitInstance.getInstance().getApiInterface().goLogin(user, pass)
+                                .enqueue(new Callback<LoginResponse>() {
+                                    @Override
+                                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                                        if (response.isSuccessful() && response.body() != null) {
+                                            if (response.body().getMessage().equals("Success")) {
+
+                                                getDepartment();
+                                                getLocSubloc();
+                                                Toast.makeText(LoginPageActivity.this, response.body().getLogin().getId(), Toast.LENGTH_SHORT).show();
+                                                new SharedPref(LoginPageActivity.this).putString("username", response.body().getLogin().getName());
+                                                new SharedPref(LoginPageActivity.this).putString("usercode", response.body().getLogin().getId());
+                                                startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
+                                            } else {
+                                                Toast.makeText(LoginPageActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(LoginPageActivity.this, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                        if (GlobalProgressDialog.isProgressShowing()) {
+                                            GlobalProgressDialog.dismissProgress();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                                        if (GlobalProgressDialog.isProgressShowing()) {
+                                            GlobalProgressDialog.dismissProgress();
+                                        }
+                                        Toast.makeText(LoginPageActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<Responsee> call, Throwable t) {
 
-                    }
-                });
-            }
-
-        });
-
+            });
+        }
 
     }
 

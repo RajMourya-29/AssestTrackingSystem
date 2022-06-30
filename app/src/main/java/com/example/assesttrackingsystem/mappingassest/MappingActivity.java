@@ -97,7 +97,7 @@ public class MappingActivity extends AppCompatActivity {
 
         button.setOnClickListener(v -> {
 
-            GlobalProgressDialog.showProgress(this, "Saving barcode details please wait...");
+            GlobalProgressDialog.showProgress(this, "Saving bar tag details please wait...");
 
             if (SaveBoxData.isEmpty()) {
                 if (GlobalProgressDialog.isProgressShowing()) {
@@ -122,7 +122,6 @@ public class MappingActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<SaveInventoryBarcodeResponse> call, Response<SaveInventoryBarcodeResponse> response) {
                                 if (response.isSuccessful() && response.body() != null) {
-                                    //      new Logger(MappingActivity.this).saveLog("MappingActivity Activity", "Success Response: " + response.isSuccessful());
                                     if (response.body().getMessage().equals("Data Inserted Successfully")) {
 
                                         new MaterialAlertDialogBuilder(MappingActivity.this)
@@ -152,7 +151,6 @@ public class MappingActivity extends AppCompatActivity {
                                     }
 
                                 } else {
-                                    //  new Logger(MappingActivity.this).saveLog("MappingActivity Activity", "Error Response: " + response.errorBody());
 
                                     Toast.makeText(MappingActivity.this, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                                 }

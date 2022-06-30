@@ -2,6 +2,8 @@ package com.example.assesttrackingsystem;
 
 import com.example.assesttrackingsystem.auditpackage.GetDeptResponse;
 import com.example.assesttrackingsystem.auditpackage.LocSublocResponse;
+import com.example.assesttrackingsystem.auditpackage.SaveAduditResponse;
+import com.example.assesttrackingsystem.loginpage.LoginResponse;
 import com.example.assesttrackingsystem.mappingassest.SaveInventoryBarcodeResponse;
 import com.example.assesttrackingsystem.transferassest.pojoclass.AssetDetail;
 
@@ -40,8 +42,8 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("CheckLogin")
-    Call<Responsee> login(@Field("userid") String userid,
-                          @Field("password") String password);
+    Call<LoginResponse> goLogin(@Field("userid") String userid,
+                                @Field("password") String password);
 
     @GET("BasicAssetDetails")
     Call<AssetDetail> getassetdetail(
@@ -62,5 +64,12 @@ public interface ApiInterface {
 
     @GET("Getdepartment")
     Call<GetDeptResponse> Getdepartment();
+
+    @POST("SaveAuditdataDetail")
+    @FormUrlEncoded
+    Call<SaveAduditResponse> SaveAuditdataDetail(
+            @Field("json") String json
+
+    );
 
 }
