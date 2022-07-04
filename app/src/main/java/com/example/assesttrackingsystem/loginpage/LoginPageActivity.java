@@ -65,14 +65,17 @@ public class LoginPageActivity extends AppCompatActivity {
 
 
             login.setOnClickListener(v -> {
-              //  GlobalProgressDialog.showProgress(this, "Logging in please wait...");
+              GlobalProgressDialog.showProgress(this, "Logging in please wait...");
                 String user = userid.getText().toString();
                 String pass = password.getText().toString();
 
                 if (user.isEmpty() || pass.isEmpty()) {
                     Toast.makeText(LoginPageActivity.this, "Somthing is missing ", Toast.LENGTH_SHORT).show();
+                    if (GlobalProgressDialog.isProgressShowing()) {
+                        GlobalProgressDialog.dismissProgress();
+                    }
                 } else {
-                    //GlobalProgressDialog.showProgress(this, "Logging in please wait...");
+                    GlobalProgressDialog.showProgress(this, "Logging in please wait...");
                     if (!Global.isOnline(LoginPageActivity.this)) {
                         if (GlobalProgressDialog.isProgressShowing()) {
                             GlobalProgressDialog.dismissProgress();

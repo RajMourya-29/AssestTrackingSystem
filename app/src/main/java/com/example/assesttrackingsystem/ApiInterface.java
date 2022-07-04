@@ -53,11 +53,13 @@ public interface ApiInterface {
     Call<AssetDetail> getissueassetdetail(
             @Query("assetbarcode") String assetbarcode);
 
-    @POST("SaveInventoryBarcodeDetail")
+
+    @POST("SaveMappingBarcodeResponse")
     @FormUrlEncoded
     Call<SaveInventoryBarcodeResponse> saveAllBarcode(
-            @Field("json") String barcodeData);
+            @Field("json") String json
 
+    );
 
     @GET("Getloc_subloc")
     Call<LocSublocResponse> GetLocandsubloc();

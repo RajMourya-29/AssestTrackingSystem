@@ -62,7 +62,7 @@ public class MappingAdapter extends RecyclerView.Adapter<MappingAdapter.ViewHold
 
             tv1 = (TextView) itemView.findViewById(R.id.barcode);
             tv2 = (TextView) itemView.findViewById(R.id.rfid);
-          ;
+
         }
     }
 }

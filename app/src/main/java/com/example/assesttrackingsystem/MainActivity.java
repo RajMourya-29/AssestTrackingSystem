@@ -4,6 +4,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.assesttrackingsystem.assignassest.AssestTrackingActivity;
 import com.example.assesttrackingsystem.auditpackage.auditActivity;
@@ -22,6 +24,11 @@ import com.example.assesttrackingsystem.utils.SharedPref;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class MainActivity extends AppCompatActivity {
+
+    LinearLayout inventory_layout,dispatch_layout,Receive_layout,pikingsheet_layout,missingrack_layout,barcodereplaced_layout,retrofyt1,appeove;
+    String  name,plantid,Post;
+    CardView inventory_card,dispatch_card,receive_card,picking_card,missing_card,replace_card,rectfy_card,appeovecard;
+
     String  usename,usercode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,27 +54,27 @@ public class MainActivity extends AppCompatActivity {
         };
 
         MainActivity.this.getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        findViewById(R.id.mapping).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.inventory_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, MappingActivity.class));
             }
         });
 
-        findViewById(R.id.assign).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.Receive_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AssestTrackingActivity.class));
             }
         });
 
-        findViewById(R.id.transfer).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dispatch_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, TransferActivity.class));
             }
         });
-        findViewById(R.id.audit).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.pikingsheet_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, auditActivity.class));

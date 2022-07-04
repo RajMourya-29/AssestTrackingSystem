@@ -1,6 +1,7 @@
 package com.example.assesttrackingsystem.mappingassest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
@@ -23,7 +24,12 @@ import com.example.assesttrackingsystem.ApiInterface;
 import com.example.assesttrackingsystem.Global;
 import com.example.assesttrackingsystem.R;
 import com.example.assesttrackingsystem.Responsee;
+import com.example.assesttrackingsystem.auditpackage.AuditAdapter;
+import com.example.assesttrackingsystem.auditpackage.AuditModel;
 import com.example.assesttrackingsystem.auditpackage.BaseUtil;
+import com.example.assesttrackingsystem.auditpackage.SaveAduditResponse;
+import com.example.assesttrackingsystem.auditpackage.auditActivity;
+import com.example.assesttrackingsystem.utils.SharedPref;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import com.seuic.uhf.UHFService;
@@ -46,13 +52,14 @@ public class MappingActivity extends AppCompatActivity {
     EditText barcode, rfid;
     String bartag, rfidtag;
     Button button;
+    String  username,usercode;
     private databaseHelper2 handler;
     ArrayList<String[]> SaveBoxData;
 
     private String model, strEPC;
     private SoundPool soundPool;
     private ArrayList<MappingModel> MappingModelArraylist;
-    private ArrayList<String[]> barcodata;
+    private ArrayList<MappingModel> barcodata;
     private int soundId;
     String data;
     RecyclerView user_list;
@@ -74,32 +81,41 @@ public class MappingActivity extends AppCompatActivity {
         rfid = findViewById(R.id.edt_rfid);
         button = findViewById(R.id.save);
 
+        username= new SharedPref(MappingActivity.this).getString("username", "");
+        Log.e("TAG","username : "+username);
+        usercode = new SharedPref(MappingActivity.this).getString("usercode","");
+        Log.e("TAG","usercode : "+usercode);
+
 
 //        bartag = barcode.getText().toString();
 //        rfidtag = rfid.getText().toString();
 
         MappingModelArraylist = new ArrayList<>();
-        barcodata = new ArrayList<String[]>();
+        barcodata  = new ArrayList<>();
         builder = new AlertDialog.Builder(this);
 
         user_list = findViewById(R.id.user_list);
-        mappingAdapter = new MappingAdapter(MappingActivity.this, MappingModelArraylist);
-        user_list.setAdapter(mappingAdapter);
 
         barcode.requestFocus();
+
+
+
+        mappingAdapter = new MappingAdapter(MappingActivity.this, barcodata);
+        user_list.setLayoutManager(new LinearLayoutManager(MappingActivity.this));
+        user_list.setItemAnimator(null);
+        user_list.setAdapter(mappingAdapter);
+
         barcodata.addAll(handler.getMappingdata());
-//        AuditModelArrayList.addAll(handler.getalldata());
-//
-//        if (AuditModelArrayList.size() > 0){
-//            auditAdapter.notifyItemChanged(AuditModelArrayList.size());
-//        }
-        SaveBoxData = handler.getMappingdata();
+
+        if (barcodata.size() > 0){
+            mappingAdapter.notifyItemChanged(barcodata.size());
+        }
 
         button.setOnClickListener(v -> {
 
             GlobalProgressDialog.showProgress(this, "Saving bar tag details please wait...");
 
-            if (SaveBoxData.isEmpty()) {
+            if (barcodata.isEmpty()) {
                 if (GlobalProgressDialog.isProgressShowing()) {
                     GlobalProgressDialog.dismissProgress();
                 }
@@ -107,7 +123,7 @@ public class MappingActivity extends AppCompatActivity {
             } else {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    JSONArray inventoryBarcodeJsonArray = new JSONArray(SaveBoxData.toString());
+                    JSONArray inventoryBarcodeJsonArray = new JSONArray(barcodata.toString());
                     jsonObject.put("SaveBoxData", inventoryBarcodeJsonArray);
                     Log.e("Json: ", jsonObject.toString());
                 } catch (JSONException exception) {
@@ -117,6 +133,7 @@ public class MappingActivity extends AppCompatActivity {
                     exception.printStackTrace();
                 }
 
+
                 RetrofitInstance.getInstance().getApiInterface().saveAllBarcode(jsonObject.toString())
                         .enqueue(new Callback<SaveInventoryBarcodeResponse>() {
                             @Override
@@ -124,36 +141,49 @@ public class MappingActivity extends AppCompatActivity {
                                 if (response.isSuccessful() && response.body() != null) {
                                     if (response.body().getMessage().equals("Data Inserted Successfully")) {
 
-                                        new MaterialAlertDialogBuilder(MappingActivity.this)
-                                                .setTitle("message")
-                                                .setIcon(R.drawable.ic_launcher_background)
-                                                .setCancelable(false)
-                                                .setMessage("Data Inserted Successfully")
-                                                .setPositiveButton("Okay", (dialog, which) -> {
-                                                    SaveBoxData.clear();
-                                                    handler.deleteRecords();
-                                                    finish();
-                                                    startActivity(getIntent());
-                                                    dialog.cancel();
-                                                }).create().show();
-                                    } else {
-                                        new MaterialAlertDialogBuilder(MappingActivity.this)
-                                                .setTitle("message")
-                                                .setIcon(R.drawable.ic_launcher_background)
-                                                .setCancelable(false)
-                                                .setMessage(response.body().getMessage())
-                                                .setPositiveButton("Okay", (dialog, which) -> {
-                                                    finish();
-                                                    startActivity(getIntent());
-                                                    dialog.cancel();
-                                                }).create().show();
-                                        Toast.makeText(MappingActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        handler.deleteRecords();
+                                        barcodata.clear();
+                                        if (response.body().getResponse() != null) {
+                                            for (int i = 0; i < response.body().getResponse().size(); i++) {
+                                                barcodata.add(new MappingModel(
+                                                        response.body().getResponse().get(i).getBarcode(),
+                                                        response.body().getResponse().get(i).getRfid(),
+                                                        response.body().getResponse().get(i).getScanBy(),
+                                                        response.body().getResponse().get(i).getUsercode()
+                                                ));
+                                            }
+
+                                                Log.e("Size: ", "" + barcodata.size());
+
+                                            }
+                                        runOnUiThread(() ->
+                                                mappingAdapter.notifyItemChanged(barcodata.size()));
                                     }
+                                    new MaterialAlertDialogBuilder(MappingActivity.this)
+                                            .setTitle("message")
+                                            .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                            .setCancelable(false)
+                                            .setMessage("Data Inserted Successfully")
+                                            .setPositiveButton("Okay", (dialog, which) -> {
+//                                                barcodata.clear();
+//                                                handler.deleteRecords();
 
+                                                dialog.cancel();
+                                            }).create().show();
                                 } else {
-
-                                    Toast.makeText(MappingActivity.this, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                                    new MaterialAlertDialogBuilder(MappingActivity.this)
+                                            .setTitle("message")
+                                            .setIcon(R.drawable.ic_baseline_error_24)
+                                            .setCancelable(false)
+                                            .setMessage(response.body().getMessage())
+                                            .setPositiveButton("Okay", (dialog, which) -> {
+                                                finish();
+                                                startActivity(getIntent());
+                                                dialog.cancel();
+                                            }).create().show();
                                 }
+
+
                                 if (GlobalProgressDialog.isProgressShowing()) {
                                     GlobalProgressDialog.dismissProgress();
                                 }
@@ -169,9 +199,12 @@ public class MappingActivity extends AppCompatActivity {
                                 Toast.makeText(MappingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
             }
 
+
         });
+
 
         barcode.setOnKeyListener((v, keyCode, event) -> {
 
@@ -228,7 +261,7 @@ public class MappingActivity extends AppCompatActivity {
                     }
 
 
-                    int r = handler.insertmappingdata(bartag, rfidtag, "", "");
+                    int r = handler.insertmappingdata(bartag, rfidtag,username , usercode);
                     if (r == 0) {
                         builder.setMessage("Barcode And RFID already present")
                                 .setIcon(R.drawable.rounded_button)
@@ -246,14 +279,9 @@ public class MappingActivity extends AppCompatActivity {
                         alert.setTitle("ERROR");
                         alert.show();
                     } else {
-                        MappingModelArraylist.clear();
-                        SaveBoxData = handler.getMappingdata();
-                        for (String[] str : SaveBoxData) {
-                            //       String log = str[0] + "|" + str[1] + "|" + str[2];
+                        barcodata.add(new MappingModel(bartag, rfidtag, username, usercode));
+                        mappingAdapter.notifyItemChanged(barcodata.size());
 
-                            Toast.makeText(MappingActivity.this, "successfully", Toast.LENGTH_SHORT).show();
-                            MappingModelArraylist.add(new MappingModel(str[0], str[1]));
-                            mappingAdapter.notifyDataSetChanged();
                             rfid.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -264,7 +292,7 @@ public class MappingActivity extends AppCompatActivity {
                             });
                         }
                     }
-                }
+
             }
 
 

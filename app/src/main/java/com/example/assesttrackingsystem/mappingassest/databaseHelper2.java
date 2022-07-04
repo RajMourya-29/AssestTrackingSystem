@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.assesttrackingsystem.auditpackage.AuditModel;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +23,8 @@ public class databaseHelper2 extends SQLiteOpenHelper {
     private static final String RFID = "rfid";
     private static final String SCANNED_DATE = "date";
     private static final String SCANNED_TIME = "time";
+    private static final String USERNAME = "username";
+    private static final String USERCODE = "usercode";
 
 
 
@@ -33,7 +37,7 @@ public class databaseHelper2 extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL( "create table mapping_table " +
-                "(id integer primary key, barcode text,rfid text,date text,time text)"
+                "(id integer primary key, barcode text,rfid text,username text,usercode text)"
         );
 
 
@@ -45,7 +49,7 @@ public class databaseHelper2 extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public int insertmappingdata (String barcode, String rfid,String date,String currentTime) {
+    public int insertmappingdata (String barcode, String rfid,String username,String usercode) {
         SQLiteDatabase db = this.getWritableDatabase();
         String QUERY = "SELECT * FROM  "+MAPPING + " WHERE BARCODE='"+barcode+"' OR RFID='"+rfid+"';";
         Cursor cursor = db.rawQuery(QUERY, null);
@@ -56,12 +60,10 @@ public class databaseHelper2 extends SQLiteOpenHelper {
         {
 
             ContentValues contentValues = new ContentValues();
-            String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss",
-                    Locale.getDefault()).format(new Date());
-
             contentValues.put("barcode", barcode);
             contentValues.put("rfid", rfid);
-            contentValues.put("date", timeStamp);
+            contentValues.put("username", username);
+            contentValues.put("usercode", usercode);
 
             db.insert("mapping_table", null, contentValues);
             return 1;
@@ -69,9 +71,34 @@ public class databaseHelper2 extends SQLiteOpenHelper {
      }
 
 
-    public ArrayList<String[]> getMappingdata()
+//    public ArrayList<String[]> getMappingdata()
+//    {
+//        ArrayList<String[]> outputlist = new ArrayList();
+//        String selectQuery =  "SELECT * FROM  "+MAPPING;
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        if(cursor.moveToNext())
+//        {
+//            do
+//            {
+//                String barcode = (cursor.getString(cursor.getColumnIndex(BARCODE)));
+//                String rfid = (cursor.getString(cursor.getColumnIndex(RFID)));
+//                String username =  (cursor.getString(cursor.getColumnIndex(USERNAME)));
+//                String usercode =  (cursor.getString(cursor.getColumnIndex(USERCODE)));
+//
+//                outputlist.add(new String[]{barcode,rfid});
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//
+//        return outputlist;
+//    }
+
+
+    public ArrayList<MappingModel> getMappingdata()
     {
-        ArrayList<String[]> outputlist = new ArrayList();
+        ArrayList<MappingModel> outputlist = new ArrayList();
         String selectQuery =  "SELECT * FROM  "+MAPPING;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -81,17 +108,18 @@ public class databaseHelper2 extends SQLiteOpenHelper {
             {
                 String barcode = (cursor.getString(cursor.getColumnIndex(BARCODE)));
                 String rfid = (cursor.getString(cursor.getColumnIndex(RFID)));
-//                String date =  (cursor.getString(cursor.getColumnIndex(SCANNED_DATE)));
-//                String currentTime =  (cursor.getString(cursor.getColumnIndex(SCANNED_TIME)));
+                String username =  (cursor.getString(cursor.getColumnIndex(USERNAME)));
+                String usercode =  (cursor.getString(cursor.getColumnIndex(USERCODE)));
 
-                outputlist.add(new String[]{barcode,rfid});
+                outputlist.add(new MappingModel(barcode,rfid,username,usercode));
             } while (cursor.moveToNext());
         }
 
         cursor.close();
-
         return outputlist;
     }
+
+
 
     public void deleteRecords(){
         SQLiteDatabase db = this.getWritableDatabase();
