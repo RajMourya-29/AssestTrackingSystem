@@ -6,7 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
+    android:background="@drawable/bg5"
     tools:context=".mappingassest.MappingActivity">
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +18,7 @@
         android:orientation="horizontal"
         android:id="@+id/linear1"
         android:weightSum="3"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -80,7 +84,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:padding="5dip" >
 
@@ -91,6 +95,7 @@
             android:layout_weight="1.2"
             android:text="Barcode"
             android:textColor="#000"
+
             android:textSize="15dp"
             android:textStyle="bold" />
 
@@ -107,35 +112,53 @@
 
     </LinearLayout>
     <RelativeLayout
+        android:id="@+id/r1"
+        android:background="@drawable/rounded_edittext"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/_300sdp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_list"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
             android:dividerHeight="1dp"
             android:orientation="vertical"
-            android:layout_marginBottom="70dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/barcode_list_item" />
 
 
-        <Button
-            android:id="@+id/save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_button"
-            android:text="Save" />
-
+<!--        <Button-->
+<!--            android:id="@+id/save"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            style="@style/loginButton"-->
+<!--            android:layout_marginRight="5dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Save" />-->
 
     </RelativeLayout>
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/save"
+            style="@style/loginButton"
+            android:layout_below="@+id/user_list"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Save"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:initialCornerAngle="27dp"
+            app:spinning_bar_color="#fff"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp">
+
+        </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
+
+
+
 </LinearLayout>

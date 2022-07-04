@@ -10,17 +10,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center"
+    android:layout_marginTop="@dimen/_25sdp"
     android:background="@color/login_bk_color"
-    android:padding="@dimen/_11sdp"
+    android:padding="@dimen/_15sdp"
     tools:context=".loginpage.LoginPageActivity">
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
         android:orientation="vertical"
         android:padding="17dp">
 

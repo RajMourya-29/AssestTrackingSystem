@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg5"
         android:padding="@dimen/_5sdp"
         android:orientation="vertical">
 
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/rounded_edittext">
+            >
 
         <LinearLayout
             android:id="@+id/layout_from"
@@ -132,7 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/rounded_edittext">
+            >
 
             <EditText
                 android:id="@+id/barcode"
@@ -242,11 +243,21 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/loginButton"
+            android:layout_below="@+id/user_list"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="Submit"
-            android:layout_gravity="center"/>
+            android:layout_marginTop="@dimen/_10sdp"
+            app:initialCornerAngle="27dp"
+            app:spinning_bar_color="#fff"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp">
+
+        </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
+
     </LinearLayout>
 </ScrollView>
