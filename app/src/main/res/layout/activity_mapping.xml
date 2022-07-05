@@ -115,7 +115,7 @@
         android:id="@+id/r1"
         android:background="@drawable/rounded_edittext"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_300sdp">
+        android:layout_height="@dimen/_200sdp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_list"

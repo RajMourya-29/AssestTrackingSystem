@@ -242,38 +242,49 @@ public class auditActivity extends AppCompatActivity implements AdapterView.OnIt
                         }
 
                         if (!mDevice.readTagData(BaseUtil.getHexByteArray(Epc), btPassword, bank, address, length, buffer)) {
-                            Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
-                            String data = BaseUtil.getHexString(buffer, length);
-                            rfid.setText(data);
-                            str_rfid=data;
-                        }
-
-                        int r = handler.insertalldata("NA", str_rfid, str_loc, str_subloc, str_dept,usename,usercode);
-                        if (r == 0) {
-                            new MaterialAlertDialogBuilder(auditActivity.this)
+                               new MaterialAlertDialogBuilder(auditActivity.this)
                                     .setTitle("message")
                                     .setIcon(R.drawable.ic_baseline_error_24)
                                     .setCancelable(false)
-                                    .setMessage(" Already Scanned")
+                                    .setMessage("failed to Scanned rfid Please Scan properly")
                                     .setPositiveButton("Okay", (dialog, which) -> {
                                         rfid.setText("");
                                         rfid.requestFocus();
                                         dialog.cancel();
                                     }).create().show();
-                        } else {
-                            AuditModelArrayList.add(new AuditModel("NA", str_rfid, str_loc, str_subloc, str_dept,usename,usercode));
-                            auditAdapter.notifyItemChanged(AuditModelArrayList.size());
 
-                            rfid.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    rfid.setText("");
-                                    rfid.requestFocus();
-                                }
-                            });
+                        } else {
+                            Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+                            String data = BaseUtil.getHexString(buffer, length);
+                            rfid.setText(data);
+                            str_rfid=data;
+                            int r = handler.insertalldata("NA", str_rfid, str_loc, str_subloc, str_dept,usename,usercode);
+                            if (r == 0) {
+                                new MaterialAlertDialogBuilder(auditActivity.this)
+                                        .setTitle("message")
+                                        .setIcon(R.drawable.ic_baseline_error_24)
+                                        .setCancelable(false)
+                                        .setMessage(" Already Scanned")
+                                        .setPositiveButton("Okay", (dialog, which) -> {
+                                            rfid.setText("");
+                                            rfid.requestFocus();
+                                            dialog.cancel();
+                                        }).create().show();
+                            } else {
+                                AuditModelArrayList.add(new AuditModel("NA", str_rfid, str_loc, str_subloc, str_dept,usename,usercode));
+                                auditAdapter.notifyItemChanged(AuditModelArrayList.size());
+
+                                rfid.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        rfid.setText("");
+                                        rfid.requestFocus();
+                                    }
+                                });
+                            }
                         }
+
+
 
                         } else {
                         Toast.makeText(getApplicationContext(), "scan rfid tag", Toast.LENGTH_SHORT).show();

@@ -253,34 +253,44 @@ public class MappingActivity extends AppCompatActivity {
 
                     if (!mDevice.readTagData(BaseUtil.getHexByteArray(Epc), btPassword, bank, address, length, buffer)) {
                         Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+                        new MaterialAlertDialogBuilder(MappingActivity.this)
+                                .setTitle("message")
+                                .setIcon(R.drawable.ic_baseline_error_24)
+                                .setCancelable(false)
+                                .setMessage("failed to Scanned rfid Please Scan properly")
+                                .setPositiveButton("Okay", (dialog, which) -> {
+                                    rfid.setText("");
+                                    rfid.requestFocus();
+                                    dialog.cancel();
+                                }).create().show();
+
                     } else {
                         Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                         String data = BaseUtil.getHexString(buffer, length);
                         rfid.setText(data);
                         rfidtag=data;
-                    }
 
+                        int r = handler.insertmappingdata(bartag, rfidtag,username , usercode);
+                        if (r == 0) {
+                            builder.setMessage("Barcode And RFID already present")
+                                    .setIcon(R.drawable.ic_baseline_error_24)
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // handler.deleteRecords();
+                                            barcode.setText("");
+                                            rfid.setText("");
+                                            barcode.requestFocus();
+                                        }
+                                    });
 
-                    int r = handler.insertmappingdata(bartag, rfidtag,username , usercode);
-                    if (r == 0) {
-                        builder.setMessage("Barcode And RFID already present")
-                                .setIcon(R.drawable.rounded_button)
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                       // handler.deleteRecords();
-                                        barcode.setText("");
-                                        rfid.setText("");
-                                        barcode.requestFocus();
-                                    }
-                                });
-
-                        AlertDialog alert = builder.create();
-                        alert.setTitle("ERROR");
-                        alert.show();
-                    } else {
-                        barcodata.add(new MappingModel(bartag, rfidtag, username, usercode));
-                        mappingAdapter.notifyItemChanged(barcodata.size());
+                            AlertDialog alert = builder.create();
+                            alert.setTitle("ERROR");
+                            alert.show();
+                        }
+                        else{
+                            barcodata.add(new MappingModel(bartag, rfidtag, username, usercode));
+                            mappingAdapter.notifyItemChanged(barcodata.size());
 
                             rfid.post(new Runnable() {
                                 @Override
@@ -291,6 +301,9 @@ public class MappingActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+                    }
+
                     }
 
             }

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,11 @@ import com.example.assesttrackingsystem.Responsee;
 import com.example.assesttrackingsystem.assignassest.pojoclasses.EmployeeName;
 import com.example.assesttrackingsystem.assignassest.pojoclasses.LocationDetail;
 import com.example.assesttrackingsystem.assignassest.pojoclasses.SubLocationDetail;
+import com.example.assesttrackingsystem.auditpackage.AuditModel;
+import com.example.assesttrackingsystem.auditpackage.BaseUtil;
+import com.example.assesttrackingsystem.auditpackage.auditActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.seuic.uhf.UHFService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +55,9 @@ public class AssestTrackingActivity extends AppCompatActivity {
     Spinner empname,location,subloaction;
     Button assign,clear;
     TextView showondate;
+
+    public static final int MAX_LEN = 64;
+    private UHFService mDevice;
 
     private int mYear,mMonth,mDay;
 
@@ -77,6 +86,9 @@ public class AssestTrackingActivity extends AppCompatActivity {
         linear2 = findViewById(R.id.linear2);
         assign = findViewById(R.id.assign);
         clear = findViewById(R.id.clear);
+
+        mDevice = UHFService.getInstance();
+
 
         responseeArrayList = new ArrayList<com.example.assesttrackingsystem.assignassest.pojoclasses.EmployeeName>();
         locationDetailList = new ArrayList<>();
@@ -151,6 +163,55 @@ public class AssestTrackingActivity extends AppCompatActivity {
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
 
+            }
+        });
+
+        rfid.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                        && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if (!rfid.getText().toString().equals("")) {
+
+                        int bank = 2;
+                        int address = 0;
+                        int length = 12;
+                        String str_password = "00000000";
+                        String Epc = rfid.getText().toString();
+
+                        byte[] btPassword = new byte[16];
+                        BaseUtil.getHexByteArray(str_password, btPassword, btPassword.length);
+                        byte[] buffer = new byte[MAX_LEN];
+                        if (length > MAX_LEN) {
+                            buffer = new byte[length];
+                        }
+
+                        if (!mDevice.readTagData(BaseUtil.getHexByteArray(Epc), btPassword, bank, address, length, buffer)) {
+                            new MaterialAlertDialogBuilder(AssestTrackingActivity.this)
+                                    .setTitle("message")
+                                    .setIcon(R.drawable.ic_baseline_error_24)
+                                    .setCancelable(false)
+                                    .setMessage("failed to Scanned rfid Please Scan properly")
+                                    .setPositiveButton("Okay", (dialog, which) -> {
+                                        rfid.setText("");
+                                        rfid.requestFocus();
+                                        dialog.cancel();
+                                    }).create().show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+                            String data = BaseUtil.getHexString(buffer, length);
+                            rfid.setText(data);
+
+                        }
+                    }
+                }
+                     else {
+                        Toast.makeText(getApplicationContext(), "scan rfid tag", Toast.LENGTH_SHORT).show();
+                    }
+
+                return false;
             }
         });
 
@@ -313,7 +374,6 @@ public class AssestTrackingActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 
