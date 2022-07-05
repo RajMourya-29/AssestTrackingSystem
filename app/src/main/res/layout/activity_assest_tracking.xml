@@ -250,7 +250,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center"
         android:weightSum="2"
 
        >
@@ -259,7 +258,6 @@
             android:id="@+id/assign"
             style="@style/loginButton"
             android:layout_below="@+id/user_list"
-            android:gravity="center"
             android:text="Assign"
             android:layout_marginBottom="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
@@ -273,13 +271,10 @@
         <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/clear"
             style="@style/loginButton"
-            android:layout_below="@+id/user_list"
-
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:gravity="center"
             android:text="Clear"
-            app:initialCornerAngle="27dp"
+            app:initialCornerAngle="0dp"
             app:spinning_bar_color="#fff"
             app:spinning_bar_padding="6dp"
             app:spinning_bar_width="4dp">
