@@ -4,11 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:padding="@dimen/_10sdp"
     android:layout_height="match_parent"
+    android:background="@drawable/bg5"
     android:orientation="vertical"
     tools:context=".assignassest.AssestTrackingActivity">
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_edittext"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -210,6 +216,7 @@
         android:layout_height="40dp"
         android:orientation="horizontal"
         android:weightSum="3"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp">
 
         <TextView
@@ -237,35 +244,50 @@
             android:textAlignment="center" />
 
     </LinearLayout>
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="center"
         android:weightSum="2"
-        android:layout_marginTop="5dp">
 
-        <Button
+       >
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/assign"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_button"
-            android:text="Assign" />
+            style="@style/loginButton"
+            android:layout_below="@+id/user_list"
+            android:gravity="center"
+            android:text="Assign"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:initialCornerAngle="27dp"
+            app:spinning_bar_color="#fff"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Clear"
+        </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/clear"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/rounded_button"/>
+            style="@style/loginButton"
+            android:layout_below="@+id/user_list"
+
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="Clear"
+            app:initialCornerAngle="27dp"
+            app:spinning_bar_color="#fff"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp">
+
+        </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
+
+
+
 
     </LinearLayout>
 
