@@ -1,13 +1,10 @@
-package com.example.assesttrackingsystem.mappingassest;
+package com.example.assesttrackingsystem.blank;
 
 public class BaseUtil {
 
-	/**
+	/**2
 	 * Copy the array at the specified location
 	 */
-
-	public static String BT_NAME;
-	public static String MAC ;
 	public static void memcpy(byte[] bytesTo, byte[] bytesFrom, int len) {
 		memcpy(bytesTo, 0, bytesFrom, 0, len);
 	}

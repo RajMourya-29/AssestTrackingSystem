@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.example.assesttrackingsystem.assignassest.AssestTrackingActivity;
 import com.example.assesttrackingsystem.auditpackage.auditActivity;
+import com.example.assesttrackingsystem.blank.BlankActivity;
 import com.example.assesttrackingsystem.loginpage.LoginPageActivity;
 import com.example.assesttrackingsystem.mappingassest.MappingActivity;
 import com.example.assesttrackingsystem.transferassest.TransferActivity;

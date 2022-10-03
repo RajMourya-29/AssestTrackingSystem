@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Assest Tracking System</string>
+    <string name="readTagData_faild">ReadTagData faild.</string>
+    <string name="readTagData_sucess">ReadTagData sucess.</string>
 </resources>

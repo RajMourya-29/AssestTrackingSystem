@@ -21,6 +21,7 @@ import com.example.assesttrackingsystem.Global;
 import com.example.assesttrackingsystem.MainActivity;
 import com.example.assesttrackingsystem.R;
 import com.example.assesttrackingsystem.assignassest.AssestTrackingActivity;
+import com.example.assesttrackingsystem.blank.BaseUtil;
 import com.example.assesttrackingsystem.mappingassest.GlobalProgressDialog;
 import com.example.assesttrackingsystem.mappingassest.MappingActivity;
 import com.example.assesttrackingsystem.mappingassest.RetrofitInstance;
@@ -228,15 +229,18 @@ public class auditActivity extends AppCompatActivity implements AdapterView.OnIt
                 {
                     if (!rfid.getText().toString().equals("")) {
 
-                        int bank = 2;
+                        int bank = 1;
                         int address = 0;
-                        int length = 12;
+                        int length = 3;
                         String str_password = "00000000";
-                        String Epc = rfid.getText().toString();
+                        String Epc = rfid.getText().toString().trim();
 
                         byte[] btPassword = new byte[16];
+
                         BaseUtil.getHexByteArray(str_password, btPassword, btPassword.length);
+
                         byte[] buffer = new byte[MAX_LEN];
+
                         if (length > MAX_LEN) {
                             buffer = new byte[length];
                         }
@@ -252,7 +256,7 @@ public class auditActivity extends AppCompatActivity implements AdapterView.OnIt
                                         rfid.requestFocus();
                                         dialog.cancel();
                                     }).create().show();
-
+                            Log.e("data: ",rfid.getText().toString());
                         } else {
                             Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                             String data = BaseUtil.getHexString(buffer, length);
@@ -288,10 +292,10 @@ public class auditActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         } else {
                         Toast.makeText(getApplicationContext(), "scan rfid tag", Toast.LENGTH_SHORT).show();
-                    }
+                   }
                 }
 
-                return false;
+                return true;
             }
         });
 
